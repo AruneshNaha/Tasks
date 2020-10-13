@@ -2,6 +2,12 @@
 
 A simple todo app.
 
+![Tasks login screen](https://raw.githubusercontent.com/AruneshNaha/Tasks/main/images/2.png)
+![Tasks signup screen](https://raw.githubusercontent.com/AruneshNaha/Tasks/main/images/3.png)
+![Tasks Lists screen](https://raw.githubusercontent.com/AruneshNaha/Tasks/main/images/4.png)
+![Tasks Work screen](https://raw.githubusercontent.com/AruneshNaha/Tasks/main/images/5.png)
+![Tasks work delete screen](https://raw.githubusercontent.com/AruneshNaha/Tasks/main/images/7.png)
+
 ## Installation
 
 open git bash and type the following command
