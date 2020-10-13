@@ -1,0 +1,313 @@
+import 'dart:ui';
+import 'dart:io';
+
+import 'package:Tasks/constants/constants.dart';
+import 'package:Tasks/widgets/widgets.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
+
+class ProfileScreen extends StatefulWidget {
+  @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  File _image;
+  String username = "", email = "", description = "", imagedownloadurl = "";
+
+  @override
+  void initState() {
+    getUserDetails();
+    getPic();
+    super.initState();
+  }
+
+  Future getUserDetails() async {
+    await databaseMethods.getUserByUserUid(Constants.myUid).then((val) {
+      snapshotUserInfo = val;
+    });
+
+    String name = await snapshotUserInfo.docs[0].data()["name"];
+    String mail = await snapshotUserInfo.docs[0].data()["email"];
+    String d = await snapshotUserInfo.docs[0].data()["desc"];
+
+    setState(() {
+      username = name;
+      email = mail;
+      description = d;
+    });
+  }
+
+  Future getPic() async {
+    // await FireStorageService.loadImage(context, Constants.myUid)
+    //     .then((downloadUrl) {
+    //   setState(() {
+    //     imagedownloadurl = downloadUrl;
+    //   });
+    // });
+    String downloadUrl = await FirebaseStorage.instance
+        .ref()
+        .child("${Constants.myUid}")
+        .getDownloadURL();
+    setState(() {
+      imagedownloadurl = downloadUrl;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Future openGallery() async {
+      var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+      setState(() {
+        _image = image;
+      });
+    }
+
+    Future openCamera() async {
+      var image = await ImagePicker.pickImage(source: ImageSource.camera);
+      setState(() {
+        _image = image;
+      });
+    }
+
+    Future uploadPic(BuildContext context) async {
+      String filename = basename(_image.path);
+      StorageReference firebaseStorageRef =
+          FirebaseStorage.instance.ref().child(Constants.myUid);
+      StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
+      StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+      setState(() {
+        print("Profile picture uploaded!");
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text("Profile picture uploaded"),
+        ));
+      });
+    }
+
+    
+
+    return SafeArea(
+      child: Scaffold(
+          body: Builder(
+        builder: (context) => Container(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 60),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.image,
+                          size: 30,
+                        ),
+                        onPressed: () {
+                          openGallery();
+                          // Navigator.pop(context);
+                        },
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: CircleAvatar(
+                        radius: 100,
+                        backgroundColor: Colors.lightBlueAccent[700],
+                        child: ClipOval(
+                          child: SizedBox(
+                            width: 180,
+                            height: 180,
+                            child: _image != null || imagedownloadurl != null
+                                ? (imagedownloadurl != null
+                                    ? Image.network(
+                                        imagedownloadurl,
+                                        fit: BoxFit.fill,
+                                      )
+                                    : Icon(Icons.person, size: 100))
+                                : (_image != null
+                                    ? Image.file(
+                                        _image,
+                                        fit: BoxFit.fill,
+                                      )
+                                    : Icon(Icons.person, size: 100)),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 60),
+                      child: IconButton(
+                        icon: FaIcon(
+                          FontAwesomeIcons.camera,
+                          size: 30,
+                        ),
+                        onPressed: () {
+                          openCamera();
+                          // Navigator.pop(context);
+                        },
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        child: Column(
+                          children: [
+                            Column(
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    "Username",
+                                    style: TextStyle(
+                                      color: Colors.blueGrey,
+                                      fontFamily: "BalooBhai2",
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    username,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontFamily: "BalooBhai2",
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    
+                  ],
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        child: Column(
+                          children: [
+                            Column(
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    "Email",
+                                    style: TextStyle(
+                                      color: Colors.blueGrey,
+                                      fontFamily: "BalooBhai2",
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    email,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontFamily: "BalooBhai2",
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    
+                  ],
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                
+                SizedBox(
+                  height: 80,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    RaisedButton(
+                      color: Colors.lightBlueAccent[700],
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      elevation: 4.0,
+                      splashColor: Colors.blueGrey,
+                      child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          "Cancel",
+                          style: TextStyle(
+                              fontFamily: "BalooBhai2",
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20,
+                              color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    RaisedButton(
+                      color: Colors.lightBlueAccent[700],
+                      onPressed: () {
+                        uploadPic(context);
+                      },
+                      elevation: 4.0,
+                      splashColor: Colors.blueGrey,
+                      child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          "Upload image",
+                          style: TextStyle(
+                              fontFamily: "BalooBhai2",
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20,
+                              color: Colors.white),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 100,
+                ),
+                MySignature()
+              ],
+            ),
+          ),
+        ),
+      )),
+    );
+  }
+}
+
+class FireStorageService {
+  static loadImage(BuildContext context, image) {}
+}

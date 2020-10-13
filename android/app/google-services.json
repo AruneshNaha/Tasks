@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "952527065125",
+    "firebase_url": "https://tasks-50f5d.firebaseio.com",
+    "project_id": "tasks-50f5d",
+    "storage_bucket": "tasks-50f5d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:952527065125:android:7aadf29ba49f69c6f9afcc",
+        "android_client_info": {
+          "package_name": "com.arunesh.Tasks"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "952527065125-a7mblvdls8ifapffmj6sjrfvo4m9gjr0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbPCen2CVIDP6uxueK3tFI3Gxzm7yyNZc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "952527065125-a7mblvdls8ifapffmj6sjrfvo4m9gjr0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
