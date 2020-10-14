@@ -1,6 +1,6 @@
 # Tasks
 
-![Tasks logo](https://raw.githubusercontent.com/AruneshNaha/Tasks/main/images/Todo.png)
+![Tasks logo](https://raw.githubusercontent.com/AruneshNaha/Tasks/main/images/Todo.png=50x50)
 
 A simple todo app.
 
