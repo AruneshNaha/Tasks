@@ -1,8 +1,10 @@
 # Tasks
 
+![Tasks logo](https://raw.githubusercontent.com/AruneshNaha/Tasks/main/images/Todo.png)
+
 A simple todo app.
 
-![Tasks login screen](https://raw.githubusercontent.com/AruneshNaha/Tasks/main/Video.gif)
+![Tasks app overview](https://raw.githubusercontent.com/AruneshNaha/Tasks/main/Video.gif)
 
 
 ## Installation
